@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: traefik-ubuntu-bionic
+    image: ubuntu:bionic
+    command: /lib/systemd/systemd
+    privileged: true
+    groups:
+      - traefik
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  inventory:
+    group_vars:
+      traefik:
+        reverseproxy_le_email: molecule@yes.tld
+        reverseproxy_default_vhost: molecule.yes.tld
+        traefik_le_email: molecule@yes.tld
+        traefik_log_level: DEBUG
+        traefik_vhost: traefik.yes.tld
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

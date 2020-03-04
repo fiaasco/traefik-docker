@@ -1,0 +1,48 @@
+---
+
+- name: create the traefik container
+  docker_container:
+    name: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_logs:/var/log/traefik
+      - traefik_letsencrypt:/letsencrypt
+    privileged: yes
+    image: "traefik:{{ traefik_version }}"
+    state: started
+    restart_policy: always
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - name: bridge
+    networks_cli_compatible: yes
+    command:
+      - "--log.level={{ traefik_log_level }}"
+      - "--api"
+      - "--providers.docker=true"
+      - "--metrics=true"
+      - "--metrics.prometheus=true"
+      - "--accesslog=true"
+      - "--log.filePath=/var/log/traefik/traefik.log"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.https.address=:443"
+      - "--providers.docker.exposedbydefault=false"
+      - "--certificatesResolvers.le-ssl.acme.tlsChallenge=true"
+      - "--certificatesResolvers.le-ssl.acme.email={{ traefik_le_email }}"
+      - "--certificatesResolvers.le-ssl.acme.storage=/letsencrypt/acme.json"
+    labels: |
+      {
+        'traefik.enable': 'true',
+        'traefik.http.routers.traefik-ssl.rule': 'Host("{{ traefik_vhost }}")',
+        'traefik.http.routers.traefik-ssl.service': 'api@internal',
+        'traefik.http.routers.traefik-ssl.middlewares': 'traefik_ssl',
+        'traefik.http.routers.traefik-ssl.tls.certresolver': 'le-ssl',
+        'traefik.http.routers.traefik-ssl.tls': 'true',
+        'traefik.http.routers.traefik-ssl.entrypoints': 'https',
+        'traefik.http.middlewares.traefik_ssl.basicauth.users': 'admin:$apr1$CAf9VHW1$wOT./9N87rmx1lwluLodv0',
+        'traefik.http.routers.traefik.rule': 'Host("{{ traefik_vhost }}")',
+        'traefik.http.routers.traefik.entrypoints': 'http',
+        'traefik.http.routers.traefik.middlewares': 'redirect',
+        'traefik.http.middlewares.redirect.redirectscheme.scheme': 'https'
+      }
