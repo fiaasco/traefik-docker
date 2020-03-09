@@ -12,6 +12,8 @@ platforms:
     privileged: true
     groups:
       - traefik
+    volumes:
+      - /tmp/traefik-ubuntu-bionic:/var/lib/docker
 provisioner:
   name: ansible
   lint:
