@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/fiaasco/traefik-docker.svg?branch=master)](https://travis-ci.com/fiaasco/traefik-docker)
+
 Role Name
 =========
 
@@ -11,8 +13,8 @@ Docker running on the host, publically accessible tcp/80 and tcp/443
 Role Variables
 --------------
 
-reverseproxy_le_email: email address used for Letsencrypt registration
-reverseproxy_default_vhost: required variable for now to indicate the default virtualhost.
+traefik_le_email: email address used for Letsencrypt registration
+traefik_vhost: required variable for now to indicate the default virtualhost.
 
 Dependencies
 ------------
@@ -22,8 +24,8 @@ Example Playbook
 
     - hosts: traefik:&docker
       roles:
-         - docker
-         - traefik
+         - fiaasco.docker
+         - fiaasco.traefik-docker
 
 License
 -------
