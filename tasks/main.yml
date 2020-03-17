@@ -12,8 +12,9 @@
     state: started
     restart_policy: always
     ports:
-      - 80:80
-      - 443:443
+      - "{{ traefik_http_port }}:{{ traefik_http_port }}"
+      - "{{ traefik_https_port }}:{{ traefik_https_port }}"
+      - "{{ traefik_tcp_port }}:{{ traefik_tcp_port }}"
     networks:
       - name: bridge
     networks_cli_compatible: yes
@@ -25,8 +26,9 @@
       - "--metrics.prometheus=true"
       - "--accesslog=true"
       - "--log.filePath=/var/log/traefik/traefik.log"
-      - "--entrypoints.http.address=:80"
-      - "--entrypoints.https.address=:443"
+      - "--entrypoints.http.address=:{{ traefik_http_port }}"
+      - "--entrypoints.https.address=:{{ traefik_https_port }}"
+      - "--entrypoints.tcp.address=:{{ traefik_tcp_port }}"
       - "--providers.docker.exposedbydefault=false"
       - "--certificatesResolvers.le-ssl.acme.tlsChallenge=true"
       - "--certificatesResolvers.le-ssl.acme.email={{ traefik_le_email }}"

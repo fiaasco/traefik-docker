@@ -8,3 +8,7 @@ traefik_log_level: INFO
 traefik_version: "v2.1"
 
 traefik_vhost: traefik.internal
+
+traefik_http_port: "80"
+traefik_https_port: "443"
+traefik_tcp_port: "9090"
