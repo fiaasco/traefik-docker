@@ -5,7 +5,7 @@ traefik_le_email: valid@email
 
 traefik_log_level: INFO
 
-traefik_version: "v2.1"
+traefik_version: "v2.1.9"
 
 traefik_vhost: traefik.internal
 
